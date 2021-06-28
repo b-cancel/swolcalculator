@@ -84,6 +84,8 @@ class _HomeState extends State<Home> {
     repTarget.addListener(predictAllPossibleFutureWeights);
     //the above might update the below
     predictionIDToPredictedWeight.addListener(updatePrediction);
+
+    predictAllPossible1RMs();
   }
 
   @override
@@ -106,6 +108,31 @@ class _HomeState extends State<Home> {
     Radius arrowRadius = Radius.circular(48);
     Radius cardRadius = Radius.circular(24);
 
+    //for middle group 1 rm
+    int oneRepWeight = predictionIDTo1RM.value.length != 0
+        ? Functions.getMean(
+            predictionIDTo1RM.value.values.toList(),
+          ).toInt()
+        : 0;
+    int oneRepWeightOffBy = predictionIDTo1RM.value.length != 0
+        ? Functions.getStandardDeviation(
+            predictionIDTo1RM.value.values.toList(),
+          ).toInt()
+        : 0;
+
+    //for target weight
+    int targetRepWeight = predictionIDToPredictedWeight.value.length != 0
+        ? Functions.getMean(
+            predictionIDToPredictedWeight.value.values.toList(),
+          ).toInt()
+        : 0;
+    int targetRepWeightOffBy = predictionIDToPredictedWeight.value.length != 0
+        ? Functions.getStandardDeviation(
+            predictionIDToPredictedWeight.value.values.toList(),
+          ).toInt()
+        : 0;
+
+    //build
     return Container(
       height: MediaQuery.of(context).size.height,
       child: Scaffold(
@@ -148,21 +175,13 @@ class _HomeState extends State<Home> {
                     child: Column(
                       children: [
                         Expanded(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                Functions.getMean(
-                                  predictionIDTo1RM.value.values.toList(),
-                                ).toInt().toString(),
-                              ),
-                              Text(
-                                "give or take " +
-                                    Functions.getStandardDeviation(
-                                      predictionIDTo1RM.value.values.toList(),
-                                    ).toInt().toString(),
-                              ),
-                            ],
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: SetShower(
+                              reps: 1,
+                              weight: oneRepWeight,
+                              offby: oneRepWeightOffBy,
+                            ),
                           ),
                         ),
                         RepTargetSelector(
@@ -170,23 +189,13 @@ class _HomeState extends State<Home> {
                           subtle: false,
                         ),
                         Expanded(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                Functions.getMean(
-                                  predictionIDToPredictedWeight.value.values
-                                      .toList(),
-                                ).toInt().toString(),
-                              ),
-                              Text(
-                                "give or take " +
-                                    Functions.getStandardDeviation(
-                                      predictionIDToPredictedWeight.value.values
-                                          .toList(),
-                                    ).toInt().toString(),
-                              ),
-                            ],
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: SetShower(
+                              reps: repTarget.value,
+                              weight: targetRepWeight,
+                              offby: targetRepWeightOffBy,
+                            ),
                           ),
                         ),
                       ],
@@ -242,6 +251,77 @@ class _HomeState extends State<Home> {
       ),
     );
     */
+  }
+}
+
+class SetShower extends StatelessWidget {
+  const SetShower({
+    Key? key,
+    required this.reps,
+    required this.weight,
+    required this.offby,
+  }) : super(key: key);
+
+  final int reps;
+  final int weight;
+  final int offby;
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTextStyle(
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            reps.toString(),
+            style: TextStyle(
+              fontSize: 28,
+            ),
+          ),
+          Visibility(
+            visible: reps != 1,
+            child: Text(
+              " sets of ",
+              style: TextStyle(
+                fontSize: 14,
+              ),
+            ),
+          ),
+          Visibility(
+            visible: reps == 1,
+            child: Text(
+              "RM with ",
+              style: TextStyle(
+                fontSize: 14,
+              ),
+            ),
+          ),
+          Text(
+            weight.toString(),
+            style: TextStyle(
+              fontSize: 28,
+            ),
+          ),
+          Text(
+            "+/-",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 8,
+            ),
+          ),
+          Text(
+            offby.toString(),
+            style: TextStyle(
+              fontSize: 8,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
