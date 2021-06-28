@@ -15,39 +15,9 @@ class SliderField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: subtle ? 24 : 16,
-          ),
-          child: Padding(
-            padding: EdgeInsets.only(
-              bottom: subtle ? 8 : 16,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: (subtle ? 8 : 12),
-                  ),
-                  child: Container(
-                    color: Colors.black, //line color
-                    height: 2,
-                    width: MediaQuery.of(context).size.width,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        CustomSlider(
-          value: value,
-          lastTick: lastTick,
-        ),
-      ],
+    return CustomSlider(
+      value: value,
+      lastTick: lastTick,
     );
   }
 }

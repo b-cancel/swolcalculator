@@ -23,10 +23,12 @@ class _HomeState extends State<Home> {
   final ValueNotifier<int> repTarget = new ValueNotifier<int>(7);
   final ValueNotifier<Map<int, int>> predictionIDToPredictedWeight =
       new ValueNotifier({});
-  final ValueNotifier<int> predictionID = new ValueNotifier<int>(0);
 
-  //get
-  final ValueNotifier<int> predictedWeight = new ValueNotifier<int>(0);
+  updateState() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
 
   updatePrediction() {
     //TODO: select the appropiate prediction with prediction ID
@@ -48,6 +50,8 @@ class _HomeState extends State<Home> {
       }
       predictionIDToPredictedWeight.value = predictionIDToPredictedWeightLocal;
     }
+
+    updateState();
   }
 
   predictAllPossible1RMs() {
@@ -80,8 +84,6 @@ class _HomeState extends State<Home> {
     repTarget.addListener(predictAllPossibleFutureWeights);
     //the above might update the below
     predictionIDToPredictedWeight.addListener(updatePrediction);
-    //separate
-    predictionID.addListener(updatePrediction);
   }
 
   @override
@@ -93,9 +95,7 @@ class _HomeState extends State<Home> {
     predictionIDTo1RM.removeListener(predictAllPossibleFutureWeights);
     repTarget.removeListener(predictAllPossibleFutureWeights);
     //the above might update the below
-    predictionIDToPredictedWeight.removeListener(updatePrediction);
-    //separate
-    predictionID.removeListener(updatePrediction);
+    predictionIDToPredictedWeight.removeListener(updateState);
     //dispose
     super.dispose();
   }
@@ -111,6 +111,7 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         backgroundColor: Colors.black,
         body: Column(
+          mainAxisSize: MainAxisSize.max,
           children: [
             Container(
               padding: EdgeInsets.all(16),
@@ -135,44 +136,49 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
-            AnimatedBuilder(
-              animation: predictionIDTo1RM,
-              builder: (BuildContext context, Widget? child) {
-                if (predictionIDTo1RM.value.length == 0) {
-                  return Expanded(
+            (predictionIDTo1RM.value.length == 0)
+                ? Expanded(
                     child: Center(
                       child: WaitingFor(
                         action: "Valid Set",
                       ),
                     ),
-                  );
-                } else {
-                  return Column(
-                    children: [
-                      Text(predictionIDTo1RM.value.toString()),
-                      Text(
-                        "give or take " +
-                            Functions.getStandardDeviation(
-                              predictionIDTo1RM.value.values.toList(),
-                            ).toInt().toString(),
-                      ),
-                      /*
-                      ChangeFunction(
-                      predictionID: functionID,
-                      middleArrows: false,
-                    ),
-                    */
-                      AnimatedBuilder(
-                        animation: predictionIDToPredictedWeight,
-                        builder: (BuildContext context, Widget? child) {
-                          return Column(
+                  )
+                : Expanded(
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              RepTargetSelector(
-                                repTarget: repTarget,
-                                subtle: false,
+                              Text(
+                                Functions.getMean(
+                                  predictionIDTo1RM.value.values.toList(),
+                                ).toInt().toString(),
                               ),
-                              Text(predictionIDToPredictedWeight.value
-                                  .toString()),
+                              Text(
+                                "give or take " +
+                                    Functions.getStandardDeviation(
+                                      predictionIDTo1RM.value.values.toList(),
+                                    ).toInt().toString(),
+                              ),
+                            ],
+                          ),
+                        ),
+                        RepTargetSelector(
+                          repTarget: repTarget,
+                          subtle: false,
+                        ),
+                        Expanded(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                Functions.getMean(
+                                  predictionIDToPredictedWeight.value.values
+                                      .toList(),
+                                ).toInt().toString(),
+                              ),
                               Text(
                                 "give or take " +
                                     Functions.getStandardDeviation(
@@ -181,14 +187,11 @@ class _HomeState extends State<Home> {
                                     ).toInt().toString(),
                               ),
                             ],
-                          );
-                        },
-                      )
-                    ],
-                  );
-                }
-              },
-            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
           ],
         ),
       ),
@@ -253,6 +256,7 @@ class WaitingFor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
           width: MediaQuery.of(context).size.width / 4,

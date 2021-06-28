@@ -73,43 +73,6 @@ class CustomSlider extends StatelessWidget {
             children: ticks,
           ),
         ),
-        Padding(
-          padding: EdgeInsets.only(
-            bottom: 14.75,
-            left: 16,
-            right: 16,
-          ),
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).accentColor,
-                    border: Border.all(
-                      width: 2,
-                      color: Colors.black,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  height: 16,
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: tickColor,
-                    border: Border.all(
-                      width: 2,
-                      color: Colors.black,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  height: 16,
-                ),
-              ),
-            ],
-          ),
-        ),
         Container(
           child: MediaQuery(
             data: MediaQuery.of(context).copyWith(textScaleFactor: 1.5),
@@ -141,7 +104,7 @@ class CustomSlider extends StatelessWidget {
                   child: Center(
                     child: Icon(
                       Icons.repeat,
-                      size: 25,
+                      size: 24,
                       color: Colors.white,
                     ),
                   ),
@@ -149,7 +112,7 @@ class CustomSlider extends StatelessWidget {
                 foregroundDecoration: BoxDecoration(),
               ),
               tooltip: FlutterSliderTooltip(
-                alwaysShowTooltip: true,
+                //alwaysShowTooltip: true,
                 textStyle: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
