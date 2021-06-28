@@ -95,7 +95,7 @@ class _TappableIconState extends State<TappableIcon> {
                     decoration: BoxDecoration(
                       color: widget.focusNode.hasFocus
                           ? Theme.of(context).accentColor
-                          : Theme.of(context).cardColor,
+                          : Colors.black,
                       borderRadius: BorderRadius.only(
                         topRight: widget.isLeft ? tinyCurve : Radius.zero,
                         bottomLeft: widget.isLeft ? Radius.zero : tinyCurve,

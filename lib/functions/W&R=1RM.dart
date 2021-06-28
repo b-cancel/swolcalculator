@@ -8,29 +8,25 @@ class To1RM {
   //at all weight ranges, the function that approximate the one failing the most
   //is the one to its right
   //BACKUP ORDER: brzycki, mcGlothinOrLander, almazan, epleyOrBaechle [non failing]
-  static double? fromWeightAndReps(double weight, int reps, int predictionID) {
-    bool positiveWeight = (weight > 0);
-    if (positiveWeight) {
-      switch (predictionID) {
-        case 0:
-          return brzycki(weight, reps);
-        case 1:
-          return mcGlothinOrLanders(weight, reps);
-        case 2:
-          return almazan(weight, reps);
-        case 3:
-          return epleyOrBaechle(weight, reps);
-        case 4:
-          return oConner(weight, reps);
-        case 5:
-          return wathan(weight, reps);
-        case 6:
-          return mayhew(weight, reps);
-        default:
-          return lombardi(weight, reps);
-      }
-    } else
-      return null;
+  static double fromWeightAndReps(double weight, int reps, int predictionID) {
+    switch (predictionID) {
+      case 0:
+        return brzycki(weight, reps);
+      case 1:
+        return mcGlothinOrLanders(weight, reps);
+      case 2:
+        return almazan(weight, reps);
+      case 3:
+        return epleyOrBaechle(weight, reps);
+      case 4:
+        return oConner(weight, reps);
+      case 5:
+        return wathan(weight, reps);
+      case 6:
+        return mayhew(weight, reps);
+      default:
+        return lombardi(weight, reps);
+    }
   }
 
   //1 Brzycki Function

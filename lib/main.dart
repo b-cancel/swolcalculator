@@ -1,16 +1,11 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
+
+import 'home.dart';
 
 void main() {
   runApp(
-    Theme(
-      data: ThemeData.dark().copyWith(
-        accentColor: ThemeData.light().accentColor,
-        textSelectionTheme: TextSelectionThemeData(
-          selectionColor: ThemeData.dark().primaryColorDark,
-        ),
-      ),
-      child: MyApp(),
-    ),
+    MyApp(),
   );
 }
 
@@ -19,6 +14,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return MaterialApp(
+      builder: BotToastInit(),
+      navigatorObservers: [
+        BotToastNavigatorObserver(),
+      ],
+      theme: ThemeData.dark().copyWith(
+        accentColor: ThemeData.light().accentColor,
+        textSelectionTheme: TextSelectionThemeData(
+          selectionColor: ThemeData.dark().primaryColorDark,
+        ),
+      ),
+      home: Home(),
+    );
   }
 }

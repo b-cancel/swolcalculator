@@ -11,12 +11,12 @@ import 'fieldIcon.dart';
 //these start off at 0
 class WeightRepsField extends StatefulWidget {
   WeightRepsField({
-    required this.weight,
-    required this.reps,
+    required this.startWeight,
+    required this.startReps,
   });
 
-  final ValueNotifier<int> weight;
-  final ValueNotifier<int> reps;
+  final ValueNotifier<int> startWeight;
+  final ValueNotifier<int> startReps;
 
   //weight field
   @override
@@ -42,14 +42,14 @@ class _WeightRepsFieldState extends State<WeightRepsField> {
   updateWeightNotifier() {
     textToNotifierUpdate(
       weightController.text,
-      widget.weight,
+      widget.startWeight,
     );
   }
 
   updateRepsNotifier() {
     textToNotifierUpdate(
       repsController.text,
-      widget.reps,
+      widget.startReps,
     );
   }
 
@@ -69,19 +69,14 @@ class _WeightRepsFieldState extends State<WeightRepsField> {
 
   @override
   Widget build(BuildContext context) {
-    //-32 is for 16 pixels of padding from both sides
-    double screenWidth = MediaQuery.of(context).size.width - 32;
-    List<double> goldenBS = measurementToGoldenRatioBS(screenWidth);
-    double iconSize = goldenBS[1];
-    List<double> golden2BS = measurementToGoldenRatioBS(iconSize);
-    iconSize = golden2BS[1];
+    double iconSize = 48;
     double borderSize = 3;
 
     //build
     return Container(
       height: (iconSize * 2) + 8,
       child: Row(
-        mainAxisSize: MainAxisSize.max,
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           RecordField(
