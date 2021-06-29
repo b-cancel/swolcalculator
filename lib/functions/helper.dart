@@ -6,7 +6,7 @@ class Functions {
   static List<String> functions = [
     "Brzycki", // 0
     "McGlothin (or Landers)", // 1
-    "Almazan", // 2
+    "Almazan (our own)", // 2
     "Epley (or Baechle)", // 3
     "O'Conner", // 4
     "Wathan", // 5

@@ -104,10 +104,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    //card radius
-    Radius arrowRadius = Radius.circular(48);
-    Radius cardRadius = Radius.circular(24);
-
     //for middle group 1 rm
     int oneRepWeight = predictionIDTo1RM.value.length != 0
         ? Functions.getMean(
@@ -174,6 +170,12 @@ class _HomeState extends State<Home> {
                 : Expanded(
                     child: Column(
                       children: [
+                        ResultsTitleRow(
+                          titles: Functions.functions,
+                        ),
+                        ResultsRow(
+                          results: predictionIDTo1RM.value.values.toList(),
+                        ),
                         Expanded(
                           child: FittedBox(
                             fit: BoxFit.contain,
@@ -187,6 +189,13 @@ class _HomeState extends State<Home> {
                         RepTargetSelector(
                           repTarget: repTarget,
                           subtle: false,
+                        ),
+                        ResultsTitleRow(
+                          titles: Functions.functions,
+                        ),
+                        ResultsRow(
+                          results: predictionIDToPredictedWeight.value.values
+                              .toList(),
                         ),
                         Expanded(
                           child: FittedBox(
@@ -205,52 +214,6 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
-
-    /*
-    return ClipRRect(
-      //clipping so "hero" doesn't show up in the other page
-      child: Column(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Expanded(
-                    child: SuggestionChanger(
-                      functionID: predictionID,
-                      repTarget: repTarget,
-                      arrowRadius: arrowRadius,
-                      cardRadius: cardRadius,
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).accentColor,
-                      borderRadius: BorderRadius.only(
-                        bottomRight: cardRadius,
-                        bottomLeft: cardRadius,
-                      ),
-                    ),
-                    width: MediaQuery.of(context).size.width,
-                    child: SetDisplay(
-                      useAccent: true,
-                      title: "Goal Set",
-                      heroUp: widget.heroUp,
-                      animate: true,
-                      heroAnimTravel: widget.heroAnimTravel,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-    */
   }
 }
 
@@ -357,6 +320,58 @@ class WaitingFor extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class ResultsTitleRow extends StatelessWidget {
+  const ResultsTitleRow({
+    required this.titles,
+    Key? key,
+  }) : super(key: key);
+
+  final List<String> titles;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: List.generate(titles.length, (index) {
+        return Expanded(
+          child: Center(
+            child: Text(
+              titles[index],
+            ),
+          ),
+        );
+      }),
+    );
+  }
+}
+
+class ResultsRow extends StatelessWidget {
+  ResultsRow({
+    required this.results,
+    Key? key,
+  }) : super(key: key);
+
+  final List<int> results;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: List.generate(results.length, (index) {
+        return Expanded(
+          child: Center(
+            child: Column(
+              children: [
+                Text(
+                  results[index].toString(),
+                ),
+              ],
+            ),
+          ),
+        );
+      }),
     );
   }
 }
