@@ -1,7 +1,5 @@
 import 'dart:math' as math;
 
-import 'W&R=1RM.dart';
-
 class Functions {
   static List<String> functions = [
     "Brzycki", // 0
@@ -57,7 +55,7 @@ class Functions {
   //based on average order of functions
   static const int defaultFunctionID = 3;
 
-  static double getMean(List values) {
+  static double getMean(List<double> values) {
     double sum = 0;
     for (int i = 0; i < values.length; i++) {
       sum += values[i];
@@ -65,7 +63,7 @@ class Functions {
     return sum / values.length;
   }
 
-  static double getStandardDeviation(List values, {double? mean}) {
+  static double getStandardDeviation(List<double> values, {double? mean}) {
     if (mean == null) {
       mean = getMean(values);
     }

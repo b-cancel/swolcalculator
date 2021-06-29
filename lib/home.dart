@@ -19,9 +19,10 @@ class _HomeState extends State<Home> {
   final ValueNotifier<int> startReps = new ValueNotifier<int>(0);
 
   //calculate with
-  final ValueNotifier<Map<int, int>> predictionIDTo1RM = new ValueNotifier({});
+  final ValueNotifier<Map<int, double>> predictionIDTo1RM =
+      new ValueNotifier({});
   final ValueNotifier<int> repTarget = new ValueNotifier<int>(7);
-  final ValueNotifier<Map<int, int>> predictionIDToPredictedWeight =
+  final ValueNotifier<Map<int, double>> predictionIDToPredictedWeight =
       new ValueNotifier({});
 
   updateState() {
@@ -30,23 +31,18 @@ class _HomeState extends State<Home> {
     }
   }
 
-  updatePrediction() {
-    //TODO: select the appropiate prediction with prediction ID
-  }
-
   predictAllPossibleFutureWeights() {
-    print("new prediction");
     if (predictionIDTo1RM.value.length == 0) {
       predictionIDToPredictedWeight.value = {};
     } else {
-      Map<int, int> predictionIDToPredictedWeightLocal = {};
+      Map<int, double> predictionIDToPredictedWeightLocal = {};
       for (int predictionIndex = 0; predictionIndex <= 7; predictionIndex++) {
         predictionIDToPredictedWeightLocal[predictionIndex] =
             ToWeight.fromRepAnd1Rm(
           repTarget.value,
-          predictionIDTo1RM.value[predictionIndex]!.toDouble(),
+          predictionIDTo1RM.value[predictionIndex]!,
           predictionIndex,
-        ).toInt();
+        );
       }
       predictionIDToPredictedWeight.value = predictionIDToPredictedWeightLocal;
     }
@@ -60,13 +56,13 @@ class _HomeState extends State<Home> {
         startReps.value >= 30) {
       predictionIDTo1RM.value = {};
     } else {
-      Map<int, int> predictionIDTo1RMlocal = {};
+      Map<int, double> predictionIDTo1RMlocal = {};
       for (int predictionIndex = 0; predictionIndex <= 7; predictionIndex++) {
         predictionIDTo1RMlocal[predictionIndex] = To1RM.fromWeightAndReps(
           startWeight.value.toDouble(),
           startReps.value,
           predictionIndex,
-        ).toInt();
+        );
       }
       predictionIDTo1RM.value = predictionIDTo1RMlocal;
     }
@@ -82,10 +78,6 @@ class _HomeState extends State<Home> {
     //the above might update the below
     predictionIDTo1RM.addListener(predictAllPossibleFutureWeights);
     repTarget.addListener(predictAllPossibleFutureWeights);
-    //the above might update the below
-    predictionIDToPredictedWeight.addListener(updatePrediction);
-
-    predictAllPossible1RMs();
   }
 
   @override
@@ -105,28 +97,29 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     //for middle group 1 rm
-    int oneRepWeight = predictionIDTo1RM.value.length != 0
+    double oneRepWeight = predictionIDTo1RM.value.length != 0
         ? Functions.getMean(
             predictionIDTo1RM.value.values.toList(),
-          ).toInt()
+          )
         : 0;
-    int oneRepWeightOffBy = predictionIDTo1RM.value.length != 0
+    double oneRepWeightOffBy = predictionIDTo1RM.value.length != 0
         ? Functions.getStandardDeviation(
             predictionIDTo1RM.value.values.toList(),
-          ).toInt()
+          )
         : 0;
 
     //for target weight
-    int targetRepWeight = predictionIDToPredictedWeight.value.length != 0
+    double targetRepWeight = predictionIDToPredictedWeight.value.length != 0
         ? Functions.getMean(
             predictionIDToPredictedWeight.value.values.toList(),
-          ).toInt()
+          )
         : 0;
-    int targetRepWeightOffBy = predictionIDToPredictedWeight.value.length != 0
-        ? Functions.getStandardDeviation(
-            predictionIDToPredictedWeight.value.values.toList(),
-          ).toInt()
-        : 0;
+    double targetRepWeightOffBy =
+        predictionIDToPredictedWeight.value.length != 0
+            ? Functions.getStandardDeviation(
+                predictionIDToPredictedWeight.value.values.toList(),
+              )
+            : 0;
 
     //build
     return Container(
@@ -170,6 +163,7 @@ class _HomeState extends State<Home> {
                 : Expanded(
                     child: Column(
                       children: [
+                        /*
                         ResultsTitleRow(
                           titles: Functions.functions,
                         ),
@@ -179,31 +173,32 @@ class _HomeState extends State<Home> {
                         Expanded(
                           child: FittedBox(
                             fit: BoxFit.contain,
-                            child: SetShower(
+                            child: RepShower(
                               reps: 1,
-                              weight: oneRepWeight,
-                              offby: oneRepWeightOffBy,
+                              weight: oneRepWeight.toInt(),
+                              offby: oneRepWeightOffBy.toInt(),
                             ),
                           ),
                         ),
+                        */
                         RepTargetSelector(
                           repTarget: repTarget,
                           subtle: false,
-                        ),
-                        ResultsTitleRow(
-                          titles: Functions.functions,
                         ),
                         ResultsRow(
                           results: predictionIDToPredictedWeight.value.values
                               .toList(),
                         ),
+                        ResultsTitleRow(
+                          titles: Functions.functions,
+                        ),
                         Expanded(
                           child: FittedBox(
                             fit: BoxFit.contain,
-                            child: SetShower(
+                            child: RepShower(
                               reps: repTarget.value,
-                              weight: targetRepWeight,
-                              offby: targetRepWeightOffBy,
+                              weight: targetRepWeight.toInt(),
+                              offby: targetRepWeightOffBy.toInt(),
                             ),
                           ),
                         ),
@@ -217,8 +212,8 @@ class _HomeState extends State<Home> {
   }
 }
 
-class SetShower extends StatelessWidget {
-  const SetShower({
+class RepShower extends StatelessWidget {
+  const RepShower({
     Key? key,
     required this.reps,
     required this.weight,
@@ -248,7 +243,7 @@ class SetShower extends StatelessWidget {
           Visibility(
             visible: reps != 1,
             child: Text(
-              " sets of ",
+              " reps of ",
               style: TextStyle(
                 fontSize: 14,
               ),
@@ -332,14 +327,34 @@ class ResultsTitleRow extends StatelessWidget {
 
   final List<String> titles;
 
+  /*
+  verticalText(String string) {
+    String spacedString = "";
+    for (int i = 0; i < (string.length - 1); i++) {
+      spacedString += (string[i] + "\n");
+    }
+    spacedString += (string[string.length - 1]);
+    return spacedString;
+  }
+  */
+
+  spacedText(String string) {
+    return string.replaceAll(" ", "\n");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: List.generate(titles.length, (index) {
         return Expanded(
-          child: Center(
-            child: Text(
-              titles[index],
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Center(
+              child: Text(
+                spacedText(titles[index]),
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
         );
@@ -354,7 +369,7 @@ class ResultsRow extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  final List<int> results;
+  final List<double> results;
 
   @override
   Widget build(BuildContext context) {
@@ -365,7 +380,7 @@ class ResultsRow extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  results[index].toString(),
+                  results[index].toInt().toString(),
                 ),
               ],
             ),
