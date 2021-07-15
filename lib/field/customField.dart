@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 //widget
 class RecordField extends StatefulWidget {
   RecordField({
+    required this.hint,
     required this.focusNode,
     required this.controller,
     required this.isLeft,
@@ -14,6 +15,7 @@ class RecordField extends StatefulWidget {
     required this.otherController,
   });
 
+  final String hint;
   final FocusNode focusNode;
   final TextEditingController controller;
   final bool isLeft;
@@ -188,6 +190,7 @@ class _RecordFieldState extends State<RecordField> {
                               border: InputBorder.none,
                               //hides digit counter
                               counterText: "",
+                              hintText: widget.hint,
                             ),
                             //hide signs or decimals from keyboard if possible
                             keyboardType: TextInputType.numberWithOptions(

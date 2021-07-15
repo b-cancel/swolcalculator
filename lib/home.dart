@@ -134,7 +134,7 @@ class _HomeState extends State<Home> {
               child: Column(
                 children: [
                   Text(
-                    "Last Set (less than 30 reps)",
+                    "Record Your Last Set (less than 30 reps)",
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

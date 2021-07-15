@@ -80,6 +80,7 @@ class _WeightRepsFieldState extends State<WeightRepsField> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           RecordField(
+            hint: "weight",
             focusNode: weightFocusNode,
             controller: weightController,
             isLeft: true,
@@ -112,6 +113,7 @@ class _WeightRepsFieldState extends State<WeightRepsField> {
             ],
           ),
           RecordField(
+            hint: "reps",
             focusNode: repsFocusNode,
             controller: repsController,
             isLeft: false,
